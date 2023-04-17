@@ -51,8 +51,8 @@ fi
 ```
 Используем 2 переменные связанные форматами дат логирования в access.log и error.log:
 ```
-         d=`date +%d"/"%b"/"%Y":"%H  -d "1 hour ago"`
-         derr=`date +%Y"/"%m"/"%d" "%H   -d "1 hour ago"`
+d=`date +%d"/"%b"/"%Y":"%H  -d "1 hour ago"`
+derr=`date +%Y"/"%m"/"%d" "%H   -d "1 hour ago"`
 ```
 В письме прописан обрабатываемый временной диапазон:
 ```
@@ -60,23 +60,22 @@ echo "Информация по логированию NGINX за период `
 ```
 Список IP адресов (с наибольшим кол-вом запросов) с указанием кол-ва запросов c момента последнего запуска скрипта:
 ```
-         echo "Список IP адресов (с наибольшим кол-вом запросов) с указанием кол-ва запросов c момента последнего запуска:"
-         awk -v d="$d" '$0 ~ d {print $0}' /var/log/nginx/access.log | awk '{ ipcount[$1]++ } END { for (i in ipcount) { printf "IP:%13s ~ %d times\n", i, ipcount[i] } }' | sort -t '~' -k 2,2 -rn
-
+echo "Список IP адресов (с наибольшим кол-вом запросов) с указанием кол-ва запросов c момента последнего запуска:"
+awk -v d="$d" '$0 ~ d {print $0}' /var/log/nginx/access.log | awk '{ ipcount[$1]++ } END { for (i in ipcount) { printf "IP:%13s ~ %d times\n", i, ipcount[i] } }' | sort -t '~' -k 2,2 -rn
 ```
 Список запрашиваемых URL (с наибольшим кол-вом запросов) с указанием кол-ва запросов c момента последнего запуска скрипта:
 ```
-         echo "Список запрашиваемых URL (с наибольшим кол-вом запросов) с указанием кол-ва запросов c момента последнего запуска:"
-         awk -v d="$d" '$0 ~ d {print $0}' /var/log/nginx/access.log | awk '{ urlcount[$7]++ } END { for (i in urlcount) { printf "URL:%13s ~ %d times\n", i, urlcount[i] } }' | sort -t '~' -k 2,2 -rn
+echo "Список запрашиваемых URL (с наибольшим кол-вом запросов) с указанием кол-ва запросов c момента последнего запуска:"
+awk -v d="$d" '$0 ~ d {print $0}' /var/log/nginx/access.log | awk '{ urlcount[$7]++ } END { for (i in urlcount) { printf "URL:%13s ~ %d times\n", i, urlcount[i] } }' | sort -t '~' -k 2,2 -rn
 
 ```
 Ошибки веб-сервера/приложения c момента последнего запуска:
 ```
-         echo "Ошибки веб-сервера/приложения c момента последнего запуска:"
-         awk -v d="$derr" '$0 ~ d {print $0}' /var/log/nginx/error.log 
+echo "Ошибки веб-сервера/приложения c момента последнего запуска:"
+awk -v d="$derr" '$0 ~ d {print $0}' /var/log/nginx/error.log 
 ```
 Список всех кодов HTTP ответа с указанием их кол-ва с момента последнего запуска скрипта:
 ```
-         echo "Список всех кодов HTTP ответа с указанием их кол-ва с момента последнего запуска:"
-         awk -v d="$d" '$0 ~ d {print $0}' /var/log/nginx/access.log | awk '{ codecount[$9]++ } END { for (i in codecount) { printf "ERROR_CODE:%13s ~ %d times\n", i, codecount[i] } }' | sort -t '~' -k 2,2 -rn
+echo "Список всех кодов HTTP ответа с указанием их кол-ва с момента последнего запуска:"
+awk -v d="$d" '$0 ~ d {print $0}' /var/log/nginx/access.log | awk '{ codecount[$9]++ } END { for (i in codecount) { printf "ERROR_CODE:%13s ~ %d times\n", i, codecount[i] } }' | sort -t '~' -k 2,2 -rn
 ```
